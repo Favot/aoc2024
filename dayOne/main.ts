@@ -1,36 +1,42 @@
-export type PartseFileReturn = {
+export type ParseFileReturn = {
   firstList: number[];
   secondList: number[];
 };
 
 export async function parseFileInputFile(
   fileName: string
-): Promise<PartseFileReturn> {
+): Promise<ParseFileReturn> {
   const decoder = new TextDecoder();
-  const u8arr = new Uint8Array(await Deno.readFile(fileName));
-  const decodedData = decoder.decode(u8arr).split("\n");
+  try {
+    const u8arr = new Uint8Array(await Deno.readFile(fileName));
+    const decodedData = decoder.decode(u8arr).split("\n");
 
-  return decodedData.reduce<PartseFileReturn>(
-    (acc, line) => {
-      const [firstNumber, secondeNumber] = line.split(/\s+/).map(Number);
-      if (!isNaN(firstNumber)) acc.firstList.push(firstNumber);
-      if (!isNaN(secondeNumber)) acc.secondList.push(secondeNumber);
-      return acc;
-    },
-    { firstList: [], secondList: [] }
-  );
+    return decodedData.reduce<ParseFileReturn>(
+      (acc, line) => {
+        const [firstNumber, secondeNumber] = line.split(/\s+/).map(Number);
+        if (!isNaN(firstNumber)) acc.firstList.push(firstNumber);
+        if (!isNaN(secondeNumber)) acc.secondList.push(secondeNumber);
+        return acc;
+      },
+      { firstList: [], secondList: [] }
+    );
+  } catch (error) {
+    console.error("Error reading file:", error);
+    throw error;
+  }
 }
 
 export function pariaingListPartOne(
   firstList: number[],
   secondList: number[]
 ): number {
-  const sortedFirstList = firstList.sort((a, b) => a - b);
   const sortedSecondList = secondList.sort((a, b) => a - b);
 
-  return sortedFirstList.reduce((acc, curr, index) => {
-    return (acc += Math.abs(curr - sortedSecondList[index]));
-  }, 0);
+  return firstList
+    .sort((a, b) => a - b)
+    .reduce((acc, curr, index) => {
+      return (acc += Math.abs(curr - sortedSecondList[index]));
+    }, 0);
 }
 
 export type DictionaryType = {
@@ -41,9 +47,7 @@ export const createSecondeListDictionnary = (
   list: number[]
 ): DictionaryType => {
   return list.reduce<DictionaryType>((acc, number) => {
-    number in acc
-      ? (acc[number] = acc[number] + number)
-      : (acc[number] = number);
+    acc[number] = (acc[number] || 0) + number;
     return acc;
   }, {});
 };
@@ -52,18 +56,12 @@ export function pariaingListPartTwo(
   firstList: number[],
   secondList: number[]
 ): number {
-  let result = 0;
-
   const secondeNumberListDisctionnary =
     createSecondeListDictionnary(secondList);
 
-  firstList.map((number) => {
-    if (number in secondeNumberListDisctionnary) {
-      result += secondeNumberListDisctionnary[number];
-    }
-  });
-
-  return result;
+  return firstList.reduce((acc, number) => {
+    return acc + (secondeNumberListDisctionnary[number] || 0);
+  }, 0);
 }
 
 if (import.meta.main) {

@@ -5,7 +5,7 @@ import {
   pariaingListPartOne,
   pariaingListPartTwo,
   parseFileInputFile,
-  PartseFileReturn,
+  ParseFileReturn,
 } from "./main.ts";
 
 Deno.test("pariaing list part one", () => {
@@ -48,7 +48,7 @@ Deno.test("createSecondeListDictionnary", () => {
 });
 
 Deno.test("parse file", async () => {
-  const expectResult: PartseFileReturn = {
+  const expectResult: ParseFileReturn = {
     firstList: [38665, 84587, 93374],
     secondList: [13337, 21418, 50722],
   };
