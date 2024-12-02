@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import {
-  getNumberOfSafeLinePartTwo,
+  getNumberOfSafeLine,
   getTroubleIndex,
   parseInputFile,
 } from "./main.ts";
@@ -72,7 +72,7 @@ Deno.test("should return the total count of safe lines when evaluated", () => {
     [1, 3, 6, 7, 9],
   ];
 
-  const { safeLine, madeSafeLine } = getNumberOfSafeLinePartTwo(input);
+  const { safeLine, madeSafeLine } = getNumberOfSafeLine(input);
 
   assertEquals(safeLine + madeSafeLine, 4);
 });

@@ -38,21 +38,7 @@ export const getTroubleIndex = (line: number[]) => {
   return null;
 };
 
-export const getNumberOfSafeLinePartOne = (lines: number[][]): number => {
-  let result = 0;
-
-  lines.forEach((line) => {
-    const troubleIndex = getTroubleIndex(line);
-
-    if (!troubleIndex) {
-      result++;
-    }
-  });
-
-  return result;
-};
-
-export const getNumberOfSafeLinePartTwo = (
+export const getNumberOfSafeLine = (
   lines: number[][]
 ): {
   safeLine: number;
@@ -64,11 +50,8 @@ export const getNumberOfSafeLinePartTwo = (
   lines.forEach((line) => {
     const troubleIndex = getTroubleIndex(line);
 
-    if (!troubleIndex) {
-      safeLine++;
-    } else {
+    if (troubleIndex) {
       const safeCount = [
-        line,
         line.slice(0, troubleIndex).concat(line.slice(troubleIndex + 1)),
         line.slice(0, troubleIndex + 1).concat(line.slice(troubleIndex + 2)),
         line.slice(0, troubleIndex - 1).concat(line.slice(troubleIndex)),
@@ -77,6 +60,8 @@ export const getNumberOfSafeLinePartTwo = (
       if (safeCount > 0) {
         madeSafeLine++;
       }
+    } else {
+      safeLine++;
     }
   });
 
@@ -84,15 +69,15 @@ export const getNumberOfSafeLinePartTwo = (
 };
 
 if (import.meta.main) {
-  const resultPartOne = getNumberOfSafeLinePartOne(
+  const { safeLine: safeLinePartOne } = getNumberOfSafeLine(
     await parseInputFile("inputFile.txt")
   );
 
-  console.log("Result part one:", resultPartOne);
+  console.log("Result part one:", safeLinePartOne);
 
-  const { safeLine, madeSafeLine } = getNumberOfSafeLinePartTwo(
+  const { safeLine: safeLienPartTwo, madeSafeLine } = getNumberOfSafeLine(
     await parseInputFile("inputFile.txt")
   );
 
-  console.log("Result part Two:", safeLine + madeSafeLine);
+  console.log("Result part Two:", safeLienPartTwo + madeSafeLine);
 }
